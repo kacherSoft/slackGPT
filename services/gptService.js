@@ -1,5 +1,6 @@
 const axios = require('axios');
 const axiosConfig = require('../config/axiosConfig');
+const GPT_ENDPOINT = "https://api.openai.com/v1/chat/completions";
 
 async function correctText(input) {
   const instruction = `
