@@ -1,0 +1,4 @@
+runtime: nodejs
+env: flex
+env_variables:
+  GPT_API_KEY: "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"
