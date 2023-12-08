@@ -78,5 +78,5 @@ start = "typescript-language-server --stdio"
 
 [deployment]
 run = ["sh", "-c", "npm run start"]
-deploymentTarget = "gce"
+deploymentTarget = "cloudrun"
 ignorePorts = false

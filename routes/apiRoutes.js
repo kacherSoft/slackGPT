@@ -127,4 +127,18 @@ router.post('/longer', async (req, res) => {
   }
 });
 
+router.post('/prompt_enhancement', async (req, res) => {
+  const input = req.body.text;
+  console.log(input)
+  if (!input) {
+    return res.status(400).json({ error: "Invalid Content" });
+  } else {
+    result = await gptService.promptRefine(input);
+    console.log(result)
+    result = JSON.parse(result);
+    return res.status(200).json(result);
+  }
+
+});
+
 module.exports = router;

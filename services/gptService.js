@@ -13,7 +13,7 @@ async function correctText(input) {
   `;
 
   const payload = {
-    model: "gpt-3.5-turbo-0613",
+    model: "gpt-4-1106-preview",
     messages: [
       {
         role: "system",
@@ -170,9 +170,46 @@ async function longerText(input) {
   }
 }
 
+async function promptRefine(input) {
+  // const instruction = `Prompt Refiner is an advanced GPT designed to refine and enhance non-English prompts for art or photography-related image generation tasks. When a non-English prompt is received, the GPT will first translate it into English. Then, it will enrich the prompt, adding detailed and creative elements such as time of day, weather, mood, and specific scene elements. The GPT pays close attention to foreground and background details to make the prompts more vivid and imaginative. It avoids racial or ethnic descriptors unless explicitly mentioned by the user and sensitively modifies any sensitive content to ensure appropriateness while preserving the original intent of the prompt. Responses are provided in English and are now formatted in proper JSON structure, making them easy to parse for users. This includes using correct syntax for JSON objects, ensuring that keys and string values are enclosed in double quotes, and that boolean values are correctly formatted. The output format is: {"status": true/false, "prompt": "translated and enhanced prompt"}. This improvement in response formatting aims to accommodate a broader range of users and enhance their experience with creative processes.`;
+  const instruction = `Prompt Refiner excels at converting user inputs into detailed JSON prompts tailored for art and photography image generation. It starts by translating any non-English inputs into English internally. Then, if the input is a valid prompt, it enriches it with creative details such as background, foreground, lighting, and includes photography-specific keywords like 'film', 'Kodak', '4K', 'HD'. The process carefully avoids sensitive content, and prompts containing such content are deemed invalid. The output is a clean JSON object with only two keys: 'status' and 'prompt', with the 'prompt' key containing the refined prompt as a simple paragraph. If the input is not a valid prompt, including greetings, general conversation, or sensitive information, it is marked with 'status': false, and an error message 'Invalid input for prompt refinement' is provided. This precise approach ensures that Prompt Refiner maintains its specialization and does not deviate into general conversation or unrelated tasks.The output format is: {"status": true/false, "prompt": "revived prompt"}.This ensures that the Prompt Refiner delivers a clean and correct JSON format for developers to parse and use directly in their applications, adhering strictly to its task specialization.`
+
+  const payload = {
+    model: "gpt-4",
+    messages: [
+      {
+        "role": "system",
+        "content": instruction
+      },
+      {
+        "role": "user",
+        "content": input
+      }
+    ]
+  };
+
+  try {
+    const response = await axios.post(GPT_ENDPOINT, payload, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${process.env.GPT_API_KEY}`
+      }
+    });
+
+    const message = response.data.choices[0].message.content;
+    console.log(response.data.choices[0])
+    return message; // Just return the message
+
+  } catch (error) {
+    console.error('Error calling GPT-3 API:', error);
+    throw new Error('Failed to call GPT-3 API'); // Throw the error
+  }
+}
+
 module.exports = {
   correctText,
   rewriteText,
   shortenText,
-  longerText
+  longerText,
+  promptRefine
 };
