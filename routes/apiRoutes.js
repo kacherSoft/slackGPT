@@ -133,9 +133,19 @@ router.post('/prompt_enhancement', async (req, res) => {
   if (!input) {
     return res.status(400).json({ error: "Invalid Content" });
   } else {
-    result = await gptService.promptRefine(input);
-    console.log(result)
-    result = JSON.parse(result);
+    enhance = await gptService.promptRefine(input);
+    console.log(enhance)
+    // check if the enhance text contains false then return json object with status = false, error message: invalid content. If not return json object with status = true, enhance text.
+    result = {
+      status: true,
+      text: enhance
+    }
+    if (enhance.includes("false")) {
+      result = {
+        status: false,
+        error: "Invalid Content"
+      }
+    }
     return res.status(200).json(result);
   }
 
