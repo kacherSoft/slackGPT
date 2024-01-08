@@ -138,14 +138,15 @@ router.post('/prompt_enhancement', async (req, res) => {
     // check if the enhance text contains false then return json object with status = false, error message: invalid content. If not return json object with status = true, enhance text.
     result = {
       status: true,
-      text: enhance
+      prompt: enhance
     }
-    if (enhance.includes("false")) {
+    if (enhance.includes("false") || enhance.includes("False") || enhance.includes("Invalid") || enhance.includes("invalid") || enhance.includes("I'm sorry") || enhance.includes("I cannot fulfill that request")) {
       result = {
         status: false,
-        error: "Invalid Content"
+        message: "Invalid Content"
       }
     }
+    console.log(result);
     return res.status(200).json(result);
   }
 
